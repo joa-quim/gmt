@@ -9,7 +9,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>(46) Day-light terminators and other sunlight parameters &mdash; GMT 6.1.0 documentation</title>
+  <title>(1) Flying over the Antarctic Ridge and the East Pacific Rise &mdash; GMT 6.1.0 documentation</title>
   
 
   
@@ -40,8 +40,8 @@
   <link rel="stylesheet" href="../_static/style.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="(47) Linear regression using different norms and types" href="ex47.html" />
-    <link rel="prev" title="(45) Trend modeling" href="ex45.html" /> 
+    <link rel="next" title="GMT Tutorial" href="../tutorial.html" />
+    <link rel="prev" title="(8) One year (2018) of Pacific seismicity events" href="anim08.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -190,14 +190,14 @@
         
           <li><a href="../gallery.html">Example Gallery</a> &raquo;</li>
         
-      <li>(46) Day-light terminators and other sunlight parameters</li>
+      <li>(1) Flying over the Antarctic Ridge and the East Pacific Rise</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
             
-              <a href="https://github.com/GenericMappingTools/gmt/edit/master/doc/rst/source/gallery/ex46.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/GenericMappingTools/gmt/edit/master/doc/rst/source/gallery/movie01.rst" class="fa fa-github"> Edit on GitHub</a>
             
           
         
@@ -211,35 +211,79 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="day-light-terminators-and-other-sunlight-parameters">
-<span id="example-46"></span><h1>(46) Day-light terminators and other sunlight parameters<a class="headerlink" href="#day-light-terminators-and-other-sunlight-parameters" title="Permalink to this headline">¶</a></h1>
-<p>In this example show how the module <a class="reference internal" href="../solar.html"><span class="doc">solar</span></a>
-is used to plot several terminator lines that depend on
-the location of the sun with respect to Earth.  We also
-show how an EPS illustration can serve as a custom symbol
-to be plotted with <a class="reference internal" href="../plot.html"><span class="doc">plot</span></a>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env bash</span>
-<span class="c1">#               GMT EXAMPLE 46</span>
+  <div class="section" id="flying-over-the-antarctic-ridge-and-the-east-pacific-rise">
+<span id="movie01"></span><h1>(1) Flying over the Antarctic Ridge and the East Pacific Rise<a class="headerlink" href="#flying-over-the-antarctic-ridge-and-the-east-pacific-rise" title="Permalink to this headline">¶</a></h1>
+<p>Animation of a simulated fly-over of the Pacific basin mid-ocean ridge system.
+It uses a premade flight path that originally was derived from a data file
+of the world’s ridges, then filtered and manipulated to give the equidistant
+path to simulate a constant velocity at the given altitude, with synthetic
+banking as we turn to follow the path.  We use the 30 arc second global relief
+grid and overlay a few labels for named features.</p>
+<ul class="simple">
+<li>Grid:   &#64;earth_relief_30s.grd</li>
+<li>Path:   MOR_PAC_twist_path.txt</li>
+<li>Labels: MOR_names.txt</li>
+</ul>
+<p>We create a global intensity grid using shading from East and a CPT file; these are
+created by the preflight script.
+We add a 1 second fade in and a 1 second fade out for the animation
+The resulting movie was presented at the Fall 2019 AGU meeting in an eLighting talk:
+P. Wessel, 2019, GMT science animations for the masses, Abstract IN21B-11.
+The movie took ~6 hours to render on a 24-core MacPro 2013.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 <span class="c1">#</span>
-<span class="c1"># Purpose:      Illustrate use of solar to plot day/night terminators</span>
-<span class="c1"># GMT modules:  solar, coast, plot</span>
-<span class="c1">#</span>
+<span class="c1"># Animation of a simulated fly-over of the Pacific basin mid-ocean ridge system.</span>
+<span class="c1"># It uses a premade flight path that originally was derived from a data file</span>
+<span class="c1"># of the world&#39;s ridges, then filtered and manipulated to give the equidistant</span>
+<span class="c1"># path to simulate a constant velocity at the given altitude, with synthetic</span>
+<span class="c1"># banking as we turn to follow the path.  We use the 30 arc second global relief</span>
+<span class="c1"># grid and overlay a few labels for named features.</span>
+<span class="c1"># Grid:   @earth_relief_30s.grd</span>
+<span class="c1"># Path:   MOR_PAC_twist_path.txt</span>
+<span class="c1"># Labels: MOR_names.txt</span>
+<span class="c1"># We create a global intensity grid using shading from East and a CPT file; these are</span>
+<span class="c1"># created by the preflight script.</span>
+<span class="c1"># We add a 1 second fade in and a 1 second fade out for the animation</span>
+<span class="c1"># The resulting movie was presented at the Fall 2019 AGU meeting in an eLighting talk:</span>
+<span class="c1"># P. Wessel, 2019, GMT science animations for the masses, Abstract IN21B-11.</span>
+<span class="c1"># The finished movie is available in our YouTube channel as well (without fading):</span>
+<span class="c1"># https://www.youtube.com/watch?v=LTxlR5LuJ8g</span>
+<span class="c1"># The movie took ~6 hours to render on a 24-core MacPro 2013.</span>
 
-gmt begin ex46
-	gmt coast -Rd -JKs0/25c -A5000 -W0.5p -N1/0.5p,gray -S175/210/255 -Bafg --MAP_FRAME_TYPE<span class="o">=</span>plain
-	gmt solar -Td+d2016-02-09T16:00:00 -Gnavy@95
-	gmt solar -Tc+d2016-02-09T16:00:00 -Gnavy@85
-	gmt solar -Tn+d2016-02-09T16:00:00 -Gnavy@80
-	gmt solar -Ta+d2016-02-09T16:00:00 -Gnavy@80
-	gmt solar -I+d2016-02-09T16:00:00 -C <span class="p">|</span> gmt plot -Sk@sunglasses/1.5c
-gmt end show
+cat <span class="s">&lt;&lt; EOF &gt; pre.sh</span>
+<span class="s">#!/bin/bash</span>
+<span class="s"># Pre-script: Runs once to produce files needed for all frames</span>
+<span class="s">gmt begin</span>
+<span class="s">	gmt grdgradient @earth_relief_30s.grd -A90 -Nt2.5 -Gearth_relief_30s+2.5_int.nc</span>
+<span class="s">	gmt makecpt -Cgeo -H &gt; MOR_topo.cpt</span>
+<span class="s">gmt end</span>
+<span class="s">EOF</span>
+cat <span class="s">&lt;&lt; EOF &gt; include.sh</span>
+<span class="s"># A set of parameters needed by all frames</span>
+<span class="s">ALTITUDE=1000</span>
+<span class="s">TILT=55</span>
+<span class="s">WIDTH=36</span>
+<span class="s">HEIGHT=34</span>
+<span class="s">EOF</span>
+cat <span class="s">&lt;&lt; EOF &gt; main.sh</span>
+<span class="s">#!/bin/bash</span>
+<span class="s"># Main frame script that makes a single frame given the location and twist from the data file</span>
+<span class="s"># and the other view parameters from the include file.</span>
+<span class="s">gmt begin</span>
+<span class="s">	gmt grdimage -Rg -JG\${MOVIE_COL0}/\${MOVIE_COL1}/\${ALTITUDE}/\${MOVIE_COL2}/\${TILT}/\${MOVIE_COL3}/\${WIDTH}/\${HEIGHT}/\${MOVIE_WIDTH} \</span>
+<span class="s">	  -Y0 -X0 @earth_relief_30s.grd -I/tmp/earth_relief_30s+2.5_int.nc -CMOR_topo.cpt</span>
+<span class="s">	gmt events MOR_names.txt -L100 -Et+r6+f6 -T\${MOVIE_FRAME} -F+f12p,Helvetica-Bold,yellow</span>
+<span class="s">gmt end</span>
+<span class="s">EOF</span>
+<span class="c1"># 3. Run the movie</span>
+gmt <span class="nb">set</span> PROJ_LENGTH_UNIT inch FONT_TAG 20p,Helvetica,white
+gmt movie main.sh -Iinclude.sh -CHD -Sbpre.sh -TMOR_PAC_twist_path.txt -Nmovie01 -D24 -H4 -Fnone -K -M2000,png -Gblack -Le+jTR -Lf -V -W/tmp/MOR -Zs
+rm -f gmt.conf
 </pre></div>
 </div>
-<div class="figure align-center" id="id1">
-<a class="reference internal image-reference" href="../_images/ex46.png"><img alt="../_images/ex46.png" src="../_images/ex46.png" style="width: 500px;" /></a>
-<p class="caption"><span class="caption-text">Day-light terminators.</span></p>
-</div>
-</div>
+<div class="youtube_wrapper" style="padding-bottom: 56.250000%; padding-top: 30px; position: relative; width: 100%">
+<iframe allowfullscreen="true" src="https://www.youtube.com/embed/LTxlR5LuJ8g?autoplay=1" style="border: 0; height: 100%; left: 0; position: absolute; top: 0; width: 100%">
+</iframe></div></div>
 
 
            </div>
@@ -249,10 +293,10 @@ gmt end show
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ex47.html" class="btn btn-neutral float-right" title="(47) Linear regression using different norms and types" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../tutorial.html" class="btn btn-neutral float-right" title="GMT Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ex45.html" class="btn btn-neutral float-left" title="(45) Trend modeling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="anim08.html" class="btn btn-neutral float-left" title="(8) One year (2018) of Pacific seismicity events" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
